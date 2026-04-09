@@ -12,6 +12,8 @@ body {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows:    1fr;
+  color: var(--text);
+  font-size: 14px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -24,7 +26,6 @@ aside {
   outline: 1px var(--bg-3) solid;
   background-color: var(--bg-2);
 }
-
 
 
 .panel {
@@ -71,12 +72,12 @@ aside {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  color: var(--icon-b);
+  color: var(--icon);
   background-clip: content-box;
   cursor: pointer;
 
   &:hover {
-    background-color: var(--bg-1);
+    color: var(--icon-hover);
   }
   &:focus-visible,
   &:has(:focus-visible) {
@@ -92,7 +93,7 @@ aside {
     color: transparent;
     
     > i {
-      text-shadow: 0 1px var(--icon-b);
+      text-shadow: 0 1px var(--icon);
     }
   }
 
