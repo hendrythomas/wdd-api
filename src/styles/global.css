@@ -10,21 +10,16 @@
 
 body {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 280px;
   grid-template-rows:    1fr;
-  color: var(--text);
   font-size: 14px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background-color: var(--bg-3);
 }
 
 main {
-  outline: 1px var(--bg-3) solid;
-}
-
-aside {
-  width: 280px;
-  outline: 1px var(--bg-3) solid;
-  background-color: var(--bg-2);
+  background-color: var(--bg-3);
 }
 
 
