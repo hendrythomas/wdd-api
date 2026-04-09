@@ -12,14 +12,47 @@ body {
   display: grid;
   grid-template-columns: 1fr 280px;
   grid-template-rows:    1fr;
+  grid-template-areas:
+    'main aside';
+  gap: 1px;
   font-size: 14px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text);
   background-color: var(--bg-3);
 }
+@media only screen and (max-width: 600px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows:    50% auto;
+    grid-template-areas:
+      'main'
+      'aside';
+  }
+}
 
 main {
+  grid-area: main;
+  grid-template-columns: 1fr;
+  grid-template-rows:    40px 1fr;
+  display: grid;
   background-color: var(--bg-3);
+
+  .easel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+
+    canvas {
+      width:  400px;
+      height: 400px;
+      background-color: white;
+    }
+  }
+}
+
+aside {
+  grid-area: aside;
 }
 
 
