@@ -20,7 +20,10 @@
       <header class="panel">
         <div class="menu">
           <div class="item">
-            <span class="label">Drawing: Dog</span>
+            <span class="label">
+              <span class="before">Drawing:</span>
+              <span data-insert="tutorial-name"></span>
+            </span>
             <button class="button">
               <i class="material-symbols-outlined">play_arrow</i>
             </button>
@@ -63,20 +66,20 @@
             <i class="material-symbols-outlined">arrow_forward</i>
           </button>
         </div>
-        <div class="menu">
-          <div class="item">
-            <span class="label">Camera</span>
-            <button class="button">
-              <i class="material-symbols-outlined">photo_camera</i>
-            </button>
-          </div>
-          <div class="item">
-            <div class="spacer"></div>
-            <span class="label">(Debug) Open blank</span>
-            <button class="button" id="open-blank">
-              <i class="material-symbols-outlined">arrow_forward</i>
-            </button>
-          </div>
+      </div>
+      <div class="menu">
+        <div class="item">
+          <span class="label">Camera</span>
+          <button class="button">
+            <i class="material-symbols-outlined">photo_camera</i>
+          </button>
+        </div>
+        <div class="item">
+          <div class="spacer"></div>
+          <span class="label">(Debug) Open blank</span>
+          <button class="button" id="open-blank">
+            <i class="material-symbols-outlined">arrow_forward</i>
+          </button>
         </div>
       </div>
     </aside>

@@ -15,8 +15,8 @@ body {
   grid-template-areas:
     'main aside';
   gap: 1px;
-  font-size: 14px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  font-family: 'Source Sans 3', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text);
   background-color: var(--bg-3);
 }
@@ -36,6 +36,14 @@ main {
   grid-template-rows:    40px 1fr;
   display: grid;
   background-color: var(--bg-3);
+  
+  > header {
+    z-index: 1;
+    
+    .label {
+      font-weight: bold;
+    }
+  }
 
   .easel {
     display: flex;
@@ -53,8 +61,16 @@ main {
 
 aside {
   grid-area: aside;
+  z-index: 1;
 }
 
+
+.before:has(+ :empty) {
+  display: none;
+}
+:empty + .after {
+  display: none;
+}
 
 .panel {
   background-color: var(--bg-2);
@@ -121,7 +137,7 @@ aside {
     color: transparent;
     
     > i {
-      text-shadow: 0 1px var(--icon);
+      text-shadow: 0 1px var(--icon-hover);
     }
   }
 

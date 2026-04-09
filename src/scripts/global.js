@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (e) => {
-    const id = e.target.id;
-    switch (id) {
+    switch (e.target.id) {
       case 'open-blank':
         openBlank(e);
         return;
@@ -9,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
 function openBlank(e) {
-  console.log('yeaaaah')
+  const insertTutorialName = document.querySelector('[data-insert="tutorial-name"]');
+  if (insertTutorialName === undefined) return;
+
+  insertTutorialName.textContent = 'Dog';
 }
