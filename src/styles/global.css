@@ -1,3 +1,118 @@
+:root {
+  --bg-1: #ffffff;
+  --bg-2: #e6e6e6;
+  --bg-3: #cccccc;
+  --text: #303030;
+  --icon: #505050;
+  --icon-hover: #909090;
+  scrollbar-color: #00000060 transparent;
+}
+
 body {
-  color: red;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows:    1fr;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+  outline: 1px var(--bg-3) solid;
+}
+
+aside {
+  width: 280px;
+  outline: 1px var(--bg-3) solid;
+  background-color: var(--bg-2);
+}
+
+
+
+.panel {
+  background-color: var(--bg-2);
+  outline: 1px var(--bg-3) solid;
+  overflow: auto;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+
+  &:has(.label:first-child) {
+    outline: 1px var(--bg-3) solid;
+    box-shadow: 0 1px 0 0 var(--bg-1) inset;
+  }
+}
+
+.label {
+  flex: 1;
+  line-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+
+  &:first-child {
+    padding-left: 10px;
+  }
+}
+
+.button,
+.spacer {
+  flex-shrink: 0;
+  width:  40px;
+  height: 40px;
+}
+.button {
+  display: flex;
+  padding: 6px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  color: var(--icon-b);
+  background-clip: content-box;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--bg-1);
+  }
+  &:focus-visible,
+  &:has(:focus-visible) {
+    outline: auto;
+  }
+  
+  > i {
+    font-size: 20px;
+    pointer-events: none;
+    user-select: none;
+  }
+  &:active {
+    color: transparent;
+    
+    > i {
+      text-shadow: 0 1px var(--icon-b);
+    }
+  }
+
+  > input {
+    all: unset;
+  }
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0;
+}
+
+button, a {
+  all: unset;
+  box-sizing: border-box;
 }

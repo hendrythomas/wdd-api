@@ -8,11 +8,32 @@
     <link rel="stylesheet" href="src/styles/global.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
   </head>
   <body>
-    <div class="canvas"></div>
+    <main>
+      <header></header>
+      <footer></footer>
+    </main>
+    <aside class="panel">
+      <div class="menu">
+        <div class="item">
+          <span class="label">Test</span>
+          <button class="button">
+            <i class="material-symbols-outlined">add</i>
+          </button>
+        </div>
+        <div class="item">
+          <div class="spacer"></div>
+          <span class="label">Test</span>
+          <button class="button">
+            <i class="material-symbols-outlined">more_vert</i>
+          </button>
+        </div>
+      </div>
+    </aside>
   </body>
 </html>
