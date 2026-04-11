@@ -1,12 +1,12 @@
 ---
-
+export const prerender = false
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="/src/styles/global.css">
-    <script src="/src/scripts/global.js"></script>
+    <script src="/src/scripts/index.js"></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3">
@@ -21,13 +21,14 @@
         <div class="menu">
           <div class="item">
             <span class="label">
-              <span class="before">Drawing:</span>
+              <span class="before">Drawing: </span>
               <span data-insert="tutorial-name"></span>
             </span>
-            <button class="button">
-              <i class="material-symbols-outlined">play_arrow</i>
+            <button class="icon-btn" data-do="close-drawing">
+              <input type="checkbox">
+              <i class="material-symbols-outlined">delete</i>
             </button>
-            <button class="button">
+            <button class="icon-btn" data-do="save-drawing">
               <i class="material-symbols-outlined">check</i>
             </button>
           </div>
@@ -39,46 +40,46 @@
     <aside class="panel">
       <div class="menu">
         <div class="item">
-          <span class="label">Pictures</span>
-          <button class="button">
+          <span class="label">(Debug) Ducks</span>
+          <button class="icon-btn" data-do="add-picture">
             <i class="material-symbols-outlined">add</i>
           </button>
         </div>
-        <div class="item">
+        <div class="item unfinished">
           <div class="spacer"></div>
-          <span class="label">Dog</span>
-          <button class="button">
-            <i class="material-symbols-outlined">check</i>
+          <span class="label">(Debug) Blank</span>
+          <button class="icon-btn" data-do="open-blank">
+            <i class="material-symbols-outlined">arrow_forward</i>
           </button>
         </div>
       </div>
       <div class="menu">
         <div class="item">
           <span class="label">Tutorials</span>
-          <button class="button">
+          <button class="icon-btn">
             <i class="material-symbols-outlined">search</i>
+          </button>
+        </div>
+        <div class="item unfinished">
+          <div class="spacer"></div>
+          <span class="label">Cat</span>
+          <button class="icon-btn">
+            <i class="material-symbols-outlined">arrow_forward</i>
           </button>
         </div>
         <div class="item">
           <div class="spacer"></div>
-          <span class="label">Cat</span>
-          <button class="button">
-            <i class="material-symbols-outlined">arrow_forward</i>
+          <span class="label">Dog</span>
+          <button class="icon-btn">
+            <i class="material-symbols-outlined">check</i>
           </button>
         </div>
       </div>
       <div class="menu">
         <div class="item">
           <span class="label">Camera</span>
-          <button class="button">
+          <button class="icon-btn">
             <i class="material-symbols-outlined">photo_camera</i>
-          </button>
-        </div>
-        <div class="item">
-          <div class="spacer"></div>
-          <span class="label">(Debug) Open blank</span>
-          <button class="button" id="open-blank">
-            <i class="material-symbols-outlined">arrow_forward</i>
           </button>
         </div>
       </div>
