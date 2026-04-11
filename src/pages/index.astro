@@ -38,22 +38,23 @@ export const prerender = false
       </div>
     </main>
     <aside class="panel">
-      <div class="menu">
+      <div class="menu" id="pics">
         <div class="item">
           <span class="label">(Debug) Ducks</span>
           <button class="icon-btn" data-do="add-picture">
             <i class="material-symbols-outlined">add</i>
           </button>
         </div>
-        <div class="item unfinished">
-          <div class="spacer"></div>
+      </div>
+      <div class="menu" id="blank">
+        <div class="item">
           <span class="label">(Debug) Blank</span>
-          <button class="icon-btn" data-do="open-blank">
-            <i class="material-symbols-outlined">arrow_forward</i>
+          <button class="icon-btn" data-do="add-blank">
+            <i class="material-symbols-outlined">add</i>
           </button>
         </div>
       </div>
-      <div class="menu">
+      <div class="menu" id="videos">
         <div class="item">
           <span class="label">Tutorials</span>
           <button class="icon-btn">
@@ -75,7 +76,7 @@ export const prerender = false
           </button>
         </div>
       </div>
-      <div class="menu">
+      <div class="menu" id="camera">
         <div class="item">
           <span class="label">Camera</span>
           <button class="icon-btn">
@@ -84,5 +85,15 @@ export const prerender = false
         </div>
       </div>
     </aside>
+    
+    <template id="template-pics-item">
+      <div class="item unfinished">
+        <div class="spacer"></div>
+        <span class="label" data-insert="new-title"></span>
+        <button class="icon-btn" data-do="open-blank">
+          <i class="material-symbols-outlined">arrow_forward</i>
+        </button>
+      </div>
+    </template>
   </body>
 </html>
