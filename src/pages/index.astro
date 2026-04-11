@@ -22,7 +22,7 @@ export const prerender = false
           <div class="item">
             <span class="label">
               <span class="before">Drawing: </span>
-              <span data-insert="tutorial-name"></span>
+              <span data-text="current-title"></span>
             </span>
             <button class="icon-btn" data-do="close-drawing">
               <input type="checkbox">
@@ -89,8 +89,8 @@ export const prerender = false
     <template id="template-pics-item">
       <div class="item unfinished">
         <div class="spacer"></div>
-        <span class="label" data-insert="new-title"></span>
-        <button class="icon-btn" data-do="open-blank">
+        <span class="label" data-text="new-title"></span>
+        <button class="icon-btn" data-do="open-pic">
           <i class="material-symbols-outlined">arrow_forward</i>
         </button>
       </div>

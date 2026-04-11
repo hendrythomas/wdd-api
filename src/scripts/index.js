@@ -9,10 +9,10 @@ document.addEventListener('click', (e) => {
       addPicture(e);
       return;
     case 'add-blank':
-      addBlank(e);
+      addItem('Blank', 'blank');
       return;
-    case 'open-blank':
-      openBlank(e);
+    case 'open-pic':
+      openPic(e);
       return;
     case 'save-drawing':
       saveCanvas(e);
@@ -27,29 +27,34 @@ document.addEventListener('click', (e) => {
 async function addPicture(e) {
   console.log('api test')
   await actions.apiTest();
+  const title = 'Duck';
+  addItem(title, 'pics');
 }
 
-function addBlank(e) {
-  const title = 'Blank';
-  
+function addItem(title, menuId) {
   const templatePicsItemElems = document.getElementById('template-pics-item').content.children;
   if (templatePicsItemElems === null) return;
 
-  const picsElem = document.getElementById('blank');
-  if (picsElem === null) return;
+  const menuElem = document.getElementById(menuId);
+  if (menuElem === null) return;
 
   const picsItemElem = templatePicsItemElems[0].cloneNode(true);
-  const insertTitle = picsItemElem.querySelector('[data-insert="new-title"]');
-  insertTitle.textContent = title;
-  
-  picsElem.append(picsItemElem);
+  const titleText = picsItemElem.querySelector('[data-text="new-title"]');
+  if (titleText !== null) {
+    titleText.textContent = title;
+  }
+
+  menuElem.append(picsItemElem);
 }
 
-function openBlank(e) {
-  const insertTutorialName = document.querySelector('[data-insert="tutorial-name"]');
-  if (insertTutorialName === undefined) return;
+function openPic(e) {
+  const currentTitleText = document.querySelector('[data-text="current-title"]');
+  if (currentTitleText === undefined) return;
 
-  insertTutorialName.textContent = 'Blank';
+  const newTitleText = e.target.parentNode.querySelector('[data-text="new-title"]')
+  if (newTitleText === undefined) return;
+
+  currentTitleText.textContent = newTitleText.textContent;
 }
 
 function closeDrawing(e) {
