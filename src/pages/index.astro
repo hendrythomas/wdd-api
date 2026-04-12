@@ -32,6 +32,7 @@ export const prerender = false
               <i class="material-symbols-outlined">check</i>
             </button>
           </div>
+        </div>
       </header>
       <div class="easel">
         <canvas></canvas>
@@ -40,16 +41,8 @@ export const prerender = false
     <aside class="panel">
       <div class="menu" id="pics">
         <div class="item">
-          <span class="label">(Debug) Ducks</span>
+          <span class="label">Pictures</span>
           <button class="icon-btn" data-do="add-picture">
-            <i class="material-symbols-outlined">add</i>
-          </button>
-        </div>
-      </div>
-      <div class="menu" id="blank">
-        <div class="item">
-          <span class="label">(Debug) Blank</span>
-          <button class="icon-btn" data-do="add-blank">
             <i class="material-symbols-outlined">add</i>
           </button>
         </div>
@@ -61,14 +54,14 @@ export const prerender = false
             <i class="material-symbols-outlined">search</i>
           </button>
         </div>
-        <div class="item unfinished">
+        <div class="item unfinished" data-item>
           <div class="spacer"></div>
           <span class="label">Cat</span>
           <button class="icon-btn">
             <i class="material-symbols-outlined">arrow_forward</i>
           </button>
         </div>
-        <div class="item">
+        <div class="item" data-item>
           <div class="spacer"></div>
           <span class="label">Dog</span>
           <button class="icon-btn">
@@ -87,7 +80,7 @@ export const prerender = false
     </aside>
     
     <template id="template-pics-item">
-      <div class="item unfinished">
+      <div class="item" data-item>
         <div class="spacer"></div>
         <span class="label" data-text="new-title"></span>
         <button class="icon-btn" data-do="open-pic">

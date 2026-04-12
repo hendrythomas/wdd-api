@@ -1,6 +1,24 @@
 import { actions } from 'astro:actions';
 
+class DrawingItem {
+  constructor(menuId, title, drawing, isFinished, imageUrl = '', videoUrl = '') {
+    this.menuId = menuId;
+    this.title = title;
+    this.drawing = drawing;
+    this.isFinished = isFinished;
+    this.imageUrl = imageUrl;
+    this.videoUrl = videoUrl;
+  }
+}
+
+const drawingItems = [
+  new DrawingItem('pics', 'Dog', null, false),
+  new DrawingItem('pics', 'Cat', null, false),
+  new DrawingItem('pics', 'Duck', null, false),
+];
+
 document.addEventListener('DOMContentLoaded', () => {
+  populateMenu('pics');
 });
 
 document.addEventListener('click', (e) => {
@@ -24,6 +42,25 @@ document.addEventListener('click', (e) => {
   }
 });
 
+function populateMenu(menuId) {
+  const menuElem = document.getElementById(menuId);
+  if (menuElem === null) return;
+
+  // clear menu
+  const oldItems = menuElem.querySelector('[data-item]');
+  for (const oldItem of oldItems || []) {
+    menuElem.removeChild(oldItem);
+  }
+  
+  // populate menu
+  const items = drawingItems.filter(item => 
+    item.menuId === menuId
+  );
+  for (const item of items) {
+    addItem(item.title, item.isFinished, menuId);
+  }
+}
+
 async function addPicture(e) {
   console.log('api test')
   await actions.apiTest();
@@ -31,7 +68,7 @@ async function addPicture(e) {
   addItem(title, 'pics');
 }
 
-function addItem(title, menuId) {
+function addItem(title, isFinished, menuId) {
   const templatePicsItemElems = document.getElementById('template-pics-item').content.children;
   if (templatePicsItemElems === null) return;
 
@@ -39,6 +76,9 @@ function addItem(title, menuId) {
   if (menuElem === null) return;
 
   const picsItemElem = templatePicsItemElems[0].cloneNode(true);
+  if (!isFinished) {
+    picsItemElem.classList.add('unfinished');
+  }
   const titleText = picsItemElem.querySelector('[data-text="new-title"]');
   if (titleText !== null) {
     titleText.textContent = title;
@@ -48,13 +88,6 @@ function addItem(title, menuId) {
 }
 
 function openPic(e) {
-  const currentTitleText = document.querySelector('[data-text="current-title"]');
-  if (currentTitleText === undefined) return;
-
-  const newTitleText = e.target.parentNode.querySelector('[data-text="new-title"]')
-  if (newTitleText === undefined) return;
-
-  currentTitleText.textContent = newTitleText.textContent;
 }
 
 function closeDrawing(e) {
