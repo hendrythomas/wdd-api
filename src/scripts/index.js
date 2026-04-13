@@ -11,11 +11,7 @@ class MenuItem {
   }
 }
 
-const menuItems = [
-  new MenuItem('pics', 'Dog', null),
-  new MenuItem('pics', 'Cat', null),
-  new MenuItem('videos', 'Duck', null),
-];
+const menuItems = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   updateMenuElem('pics');
