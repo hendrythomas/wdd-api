@@ -45,13 +45,15 @@ async function addPicture(e) {
   const menuId = 'pics';
   const title = 'Duck';
 
-  await actions.apiTest();
-  console.log('api test')
+  // get image url
+  const imageUrl = await actions.apiTest();
 
   const newItem = new MenuItem(
-    menuId, title, null
+    menuId, title, imageUrl
   );
   menuItems.push(newItem);
+
+  // update ui early
   addItemElem(newItem, menuItems.length);
 }
 
