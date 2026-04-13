@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions';
 
 export const server = {
-  apiTest: defineAction({
+  getDuckUrl: defineAction({
     handler: async () => {
       const url = 'https://random-d.uk/api/v2/random';
       const response = await fetch(url);

@@ -143,7 +143,6 @@ main {
   grid-template-columns: 1fr;
   grid-template-rows:    40px 1fr;
   display: grid;
-  background-color: var(--bg-3);
   
   > header {
     z-index: 1;
@@ -157,9 +156,16 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--bg-3);
     overflow: auto;
 
     canvas {
+      width:  400px;
+      height: 400px;
+      background-color: white;
+    }
+
+    img {
       width:  400px;
       height: 400px;
       background-color: white;

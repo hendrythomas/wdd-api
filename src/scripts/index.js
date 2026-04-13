@@ -46,15 +46,16 @@ async function addPicture(e) {
   const title = 'Duck';
 
   // get image url
-  const imageUrl = await actions.apiTest();
+  const imageUrlResult = await actions.getDuckUrl();
+  const imageUrl = imageUrlResult.data;
 
   const newItem = new MenuItem(
-    menuId, title, imageUrl
+    menuId, title, null, false, imageUrl
   );
   menuItems.push(newItem);
 
   // update ui early
-  addItemElem(newItem, menuItems.length);
+  addItemElem(newItem, menuItems.length - 1);
 }
 
 function updateMenuElem(menuId) {
@@ -76,14 +77,14 @@ function updateMenuElem(menuId) {
   }
 }
 
-function addItemElem(newItem, menuIndex) {
-  const TemplateMenuItemElems = document.getElementById('template-menu-item').content.children;
-  if (TemplateMenuItemElems === null) return;
+function addItemElem(newItem, index) {
+  const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
+  if (templateMenuItemElems === null) return;
 
   const menuElem = document.getElementById(newItem.menuId);
   if (menuElem === null) return;
 
-  const newItemElem = TemplateMenuItemElems[0].cloneNode(true);
+  const newItemElem = templateMenuItemElems[0].cloneNode(true);
   if (!newItem.isFinished) {
     newItemElem.classList.add('unfinished');
   }
@@ -91,19 +92,23 @@ function addItemElem(newItem, menuIndex) {
   if (titleText !== null) {
     titleText.textContent = newItem.title;
   }
-  newItemElem.dataset.menuIndex = menuIndex;
+  newItemElem.dataset.index = index;
 
   menuElem.append(newItemElem);
 }
 
 function openPic(e) {
-  // const currentTitleText = document.querySelector('[data-insert="current-title"]');
-  // if (currentTitleText === undefined) return;
+  const openItemElem = e.target.parentNode;
+  if (openItemElem === null) return;
 
-  // const newTitleText = e.target.parentNode.querySelector('[data-insert="new-title"]')
-  // if (newTitleText === undefined) return;
+  const index = openItemElem.dataset.index;
+  const openItem = menuItems[index];
+  const imageUrl = openItem.imageUrl;
 
-  // currentTitleText.textContent = newTitleText.textContent;
+  const refImage = document.getElementById('refImage');
+  if (refImage === null) return;
+
+  refImage.src = imageUrl;
 }
 
 function closeDrawing(e) {
