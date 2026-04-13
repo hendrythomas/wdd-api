@@ -22,7 +22,7 @@ export const prerender = false
           <div class="item">
             <span class="label">
               <span class="before">Drawing: </span>
-              <span data-text="current-title"></span>
+              <span data-insert="current-title"></span>
             </span>
             <button class="icon-btn" data-do="close-drawing">
               <input type="checkbox">
@@ -54,20 +54,6 @@ export const prerender = false
             <i class="material-symbols-outlined">search</i>
           </button>
         </div>
-        <div class="item unfinished" data-item>
-          <div class="spacer"></div>
-          <span class="label">Cat</span>
-          <button class="icon-btn">
-            <i class="material-symbols-outlined">arrow_forward</i>
-          </button>
-        </div>
-        <div class="item" data-item>
-          <div class="spacer"></div>
-          <span class="label">Dog</span>
-          <button class="icon-btn">
-            <i class="material-symbols-outlined">check</i>
-          </button>
-        </div>
       </div>
       <div class="menu" id="camera">
         <div class="item">
@@ -79,10 +65,10 @@ export const prerender = false
       </div>
     </aside>
     
-    <template id="template-pics-item">
+    <template id="template-menu-item">
       <div class="item" data-item>
         <div class="spacer"></div>
-        <span class="label" data-text="new-title"></span>
+        <span class="label" data-insert="new-title"></span>
         <button class="icon-btn" data-do="open-pic">
           <i class="material-symbols-outlined">arrow_forward</i>
         </button>

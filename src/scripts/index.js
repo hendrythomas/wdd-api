@@ -1,7 +1,7 @@
 import { actions } from 'astro:actions';
 
-class DrawingItem {
-  constructor(menuId, title, drawing, isFinished, imageUrl = '', videoUrl = '') {
+class MenuItem {
+  constructor(menuId, title, drawing, isFinished=false, imageUrl='', videoUrl='') {
     this.menuId = menuId;
     this.title = title;
     this.drawing = drawing;
@@ -11,23 +11,22 @@ class DrawingItem {
   }
 }
 
-const drawingItems = [
-  new DrawingItem('pics', 'Dog', null, false),
-  new DrawingItem('pics', 'Cat', null, false),
-  new DrawingItem('pics', 'Duck', null, false),
+const menuItems = [
+  new MenuItem('pics', 'Dog', null),
+  new MenuItem('videos', 'Cat', null),
+  new MenuItem('camera', 'Duck', null),
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-  populateMenu('pics');
+  updateMenuElem('pics');
+  updateMenuElem('videos');
+  updateMenuElem('camera');
 });
 
 document.addEventListener('click', (e) => {
   switch (e.target.dataset.do) {
     case 'add-picture':
       addPicture(e);
-      return;
-    case 'add-blank':
-      addItem('Blank', 'blank');
       return;
     case 'open-pic':
       openPic(e);
@@ -42,52 +41,67 @@ document.addEventListener('click', (e) => {
   }
 });
 
-function populateMenu(menuId) {
+function updateMenuElem(menuId) {
   const menuElem = document.getElementById(menuId);
   if (menuElem === null) return;
 
-  // clear menu
-  const oldItems = menuElem.querySelector('[data-item]');
+  // empty menu
+  const oldItems = menuElem.querySelectorAll('[data-item]');
   for (const oldItem of oldItems || []) {
     menuElem.removeChild(oldItem);
   }
   
   // populate menu
-  const items = drawingItems.filter(item => 
+  const items = menuItems.filter(item => 
     item.menuId === menuId
   );
   for (const item of items) {
-    addItem(item.title, item.isFinished, menuId);
+    //TODO: use index
+    addItemElem(item, 1);
   }
 }
 
 async function addPicture(e) {
-  console.log('api test')
   await actions.apiTest();
+  console.log('api test')
+
   const title = 'Duck';
-  addItem(title, 'pics');
+  const newItem = new MenuItem(
+    'pics', title, null
+  );
+  menuItems.push(newItem);
+  const menuIndex = 1;
+  addItemElem(newItem, menuIndex);
 }
 
-function addItem(title, isFinished, menuId) {
-  const templatePicsItemElems = document.getElementById('template-pics-item').content.children;
-  if (templatePicsItemElems === null) return;
+function addItemElem(newItem, menuIndex) {
+  const TemplateMenuItemElems = document.getElementById('template-menu-item').content.children;
+  if (TemplateMenuItemElems === null) return;
 
-  const menuElem = document.getElementById(menuId);
+  const menuElem = document.getElementById(newItem.menuId);
   if (menuElem === null) return;
 
-  const picsItemElem = templatePicsItemElems[0].cloneNode(true);
-  if (!isFinished) {
-    picsItemElem.classList.add('unfinished');
+  const newItemElem = TemplateMenuItemElems[0].cloneNode(true);
+  if (!newItem.isFinished) {
+    newItemElem.classList.add('unfinished');
   }
-  const titleText = picsItemElem.querySelector('[data-text="new-title"]');
+  const titleText = newItemElem.querySelector('[data-insert="new-title"]');
   if (titleText !== null) {
-    titleText.textContent = title;
+    titleText.textContent = newItem.title;
   }
+  newItemElem.dataset.menuIndex = menuIndex;
 
-  menuElem.append(picsItemElem);
+  menuElem.append(newItemElem);
 }
 
 function openPic(e) {
+  // const currentTitleText = document.querySelector('[data-insert="current-title"]');
+  // if (currentTitleText === undefined) return;
+
+  // const newTitleText = e.target.parentNode.querySelector('[data-insert="new-title"]')
+  // if (newTitleText === undefined) return;
+
+  // currentTitleText.textContent = newTitleText.textContent;
 }
 
 function closeDrawing(e) {
