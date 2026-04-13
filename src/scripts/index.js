@@ -13,8 +13,8 @@ class MenuItem {
 
 const menuItems = [
   new MenuItem('pics', 'Dog', null),
-  new MenuItem('videos', 'Cat', null),
-  new MenuItem('camera', 'Duck', null),
+  new MenuItem('pics', 'Cat', null),
+  new MenuItem('videos', 'Duck', null),
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,6 +41,20 @@ document.addEventListener('click', (e) => {
   }
 });
 
+async function addPicture(e) {
+  const menuId = 'pics';
+  const title = 'Duck';
+
+  await actions.apiTest();
+  console.log('api test')
+
+  const newItem = new MenuItem(
+    menuId, title, null
+  );
+  menuItems.push(newItem);
+  addItemElem(newItem, menuItems.length);
+}
+
 function updateMenuElem(menuId) {
   const menuElem = document.getElementById(menuId);
   if (menuElem === null) return;
@@ -56,22 +70,8 @@ function updateMenuElem(menuId) {
     item.menuId === menuId
   );
   for (const item of items) {
-    //TODO: use index
-    addItemElem(item, 1);
+    addItemElem(item, menuItems.indexOf(item));
   }
-}
-
-async function addPicture(e) {
-  await actions.apiTest();
-  console.log('api test')
-
-  const title = 'Duck';
-  const newItem = new MenuItem(
-    'pics', title, null
-  );
-  menuItems.push(newItem);
-  const menuIndex = 1;
-  addItemElem(newItem, menuIndex);
 }
 
 function addItemElem(newItem, menuIndex) {
