@@ -177,3 +177,14 @@ aside {
   grid-area: aside;
   z-index: 1;
 }
+
+.popover {
+  border: none;
+  width: 350px;
+  padding: 1rem;
+  border-radius: 10px;
+
+  > :first-child {
+    margin-top: 0;
+  }
+}

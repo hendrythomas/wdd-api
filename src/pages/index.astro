@@ -43,7 +43,7 @@ export const prerender = false
       <div class="menu" id="pics">
         <div class="item">
           <span class="label">Pictures</span>
-          <button class="icon-btn" data-do="add-picture">
+          <button class="icon-btn" popovertarget="popover-select-add-pic">
             <i class="material-symbols-outlined">add</i>
           </button>
         </div>
@@ -60,11 +60,23 @@ export const prerender = false
         <div class="item">
           <span class="label">Camera</span>
           <button class="icon-btn">
+            <i class="material-symbols-outlined">upload</i>
+          </button>
+          <button class="icon-btn">
             <i class="material-symbols-outlined">photo_camera</i>
           </button>
         </div>
       </div>
     </aside>
+    <div class="popover" id="popover-select-add-pic" popover>
+      <h3>Select a picture to add</h3>
+      <select id="select-add-pic" name="pets">
+        <option value="">--Choose--</option>
+        <option value="dog">Duck</option>
+        <option value="cat">Dog</option>
+        <option value="duck">Cat</option>
+      </select>
+    </div>
     
     <template id="template-menu-item">
       <div class="item" data-item>

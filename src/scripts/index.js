@@ -17,33 +17,66 @@ document.addEventListener('DOMContentLoaded', () => {
   updateMenuElem('pics');
   updateMenuElem('videos');
   updateMenuElem('camera');
+  setUpSelectAddPic();
 });
 
 document.addEventListener('click', (e) => {
   switch (e.target.dataset.do) {
-    case 'add-picture':
-      addPicture(e);
-      return;
     case 'open-pic':
       openPic(e);
-      return;
+      break;
     case 'save-drawing':
       saveCanvas(e);
       closeDrawing(e);
-      return;
+      break;
     case 'close-drawing':
       closeDrawing(e);
-      return;
+      break;
   }
 });
 
-async function addPicture(e) {
+function setUpSelectAddPic() {
+  const selectAddPic = document.getElementById('select-add-pic');
+  if (selectAddPic === null) return;
+
+  const popoverSelectAddPic = document.getElementById('popover-select-add-pic');
+  if (popoverSelectAddPic === null) return;
+
+  popoverSelectAddPic.addEventListener('toggle', (e) => {
+    // clear input
+    selectAddPic.selectedIndex = 0;
+  });
+  
+  selectAddPic.addEventListener('change', (e) => {
+    addPicture(selectAddPic.selectedIndex);
+    popoverSelectAddPic.hidePopover();
+  });
+}
+
+async function addPicture(topicIndex) {
   const menuId = 'pics';
-  const title = 'Duck';
 
   // get image url
-  const imageUrlResult = await actions.getDuckUrl();
-  const imageUrl = imageUrlResult.data;
+  let imageUrl;
+  let title;
+  if (topicIndex === 1) {
+    const imageUrlResult = await actions.getDuckUrl();
+    imageUrl = imageUrlResult.data;
+    title = 'Duck';
+  }
+  else if (topicIndex === 2) {
+    const imageUrlResult = await actions.getDogUrl();
+    imageUrl = imageUrlResult.data;
+    title = 'Dog';
+  }
+  else if (topicIndex === 3) {
+    const imageUrlResult = await actions.getCatUrl();
+    imageUrl = imageUrlResult.data;
+    title = 'Cat';
+  }
+  else {
+    return;
+  }
 
   const newItem = new MenuItem(
     menuId, title, null, false, imageUrl
@@ -94,17 +127,26 @@ function addItemElem(newItem, index) {
 }
 
 function openPic(e) {
-  const openItemElem = e.target.parentNode;
-  if (openItemElem === null) return;
+  const itemElem = e.target.parentNode;
+  if (itemElem === null) return;
 
-  const index = openItemElem.dataset.index;
-  const openItem = menuItems[index];
-  const imageUrl = openItem.imageUrl;
+  const index = itemElem.dataset.index;
+  const item = menuItems[index];
 
-  const refImage = document.getElementById('refImage');
-  if (refImage === null) return;
+  //TODO: close current canvas
+  //TODO: create new canvas
 
-  refImage.src = imageUrl;
+  // set reference image
+  const refImageElem = document.getElementById('refImage');
+  if (refImageElem !== null) {
+    refImageElem.src = item.imageUrl;
+  }
+
+  // set title
+  const currentTitleElem = document.querySelector('[data-insert="current-title"]');
+  if (currentTitleElem !== null) {
+    currentTitleElem.textContent = item.title;
+  }
 }
 
 function closeDrawing(e) {
