@@ -24,9 +24,13 @@ export const prerender = false
               <span class="before">Drawing: </span>
               <span data-insert="current-title"></span>
             </span>
-            <button class="icon-btn" data-do="close-drawing">
+            <button class="icon-btn" data-do="delete-drawing">
               <input type="checkbox">
               <i class="material-symbols-outlined">delete</i>
+            </button>
+            <button class="icon-btn" data-do="close-drawing">
+              <input type="checkbox">
+              <i class="material-symbols-outlined">close</i>
             </button>
             <button class="icon-btn" data-do="save-drawing">
               <i class="material-symbols-outlined">check</i>
@@ -35,8 +39,8 @@ export const prerender = false
         </div>
       </header>
       <div class="easel">
+        <canvas id="canvas"></canvas>
         <img src="" id="refImage">
-        <!-- <canvas></canvas> -->
       </div>
     </main>
     <aside class="panel">

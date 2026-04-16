@@ -30,10 +30,12 @@ document.addEventListener('click', (e) => {
       break;
     case 'save-drawing':
       saveDrawing();
-      closeDrawing();
       break;
     case 'close-drawing':
       closeDrawing();
+      break;
+    case 'delete-drawing':
+      deleteDrawing();
       break;
   }
 });
@@ -193,6 +195,10 @@ function saveDrawing() {
 
   currentDrawing.piece = canvasElem.toDataURL();
   currentDrawing.isFinished = true;
+
+  updateUi();
+  
+  closeDrawing();
 }
 
 function closeDrawing() {
@@ -212,6 +218,22 @@ function closeDrawing() {
   // clear current drawing
   currentDrawing = noDrawing;
   updateUi();
+}
+
+function deleteDrawing() {
+  const doDelete = confirm('Delete current drawing?');
+  if (!doDelete) return;
+  
+  const index = drawings.indexOf(currentDrawing);
+  if (index !== -1) {
+    drawings.splice(index, 1);
+  }
+  drawingsToStorage();
+
+  currentDrawing = noDrawing;
+  updateUi();
+
+  closeDrawing();
 }
 
 function drawingsToStorage() {
