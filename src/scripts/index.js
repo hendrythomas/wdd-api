@@ -1,22 +1,22 @@
 import { actions } from 'astro:actions';
 
-class MenuItem {
-  constructor(menuId, title, drawing, isFinished=false, imageUrl='', videoUrl='') {
+class Drawing {
+  constructor(menuId, title, piece, isFinished=false, imageUrl='', videoUrl='') {
     this.menuId = menuId;
     this.title = title;
-    this.drawing = drawing;
+    this.piece = piece;
     this.isFinished = isFinished;
     this.imageUrl = imageUrl;
     this.videoUrl = videoUrl;
   }
 }
 
-const menuItems = [];
+const drawings = [];
+const noDrawing = new Drawing(null, '', null);
+let currentDrawing = noDrawing;
 
 document.addEventListener('DOMContentLoaded', () => {
-  updateMenuElem('pics');
-  updateMenuElem('videos');
-  updateMenuElem('camera');
+  updateUi();
   listenSelectAddPic();
   listenCanvas();
 });
@@ -27,11 +27,11 @@ document.addEventListener('click', (e) => {
       openPic(e);
       break;
     case 'save-drawing':
-      saveCanvas(e);
-      closeDrawing(e);
+      saveDrawing();
+      closeDrawing();
       break;
     case 'close-drawing':
-      closeDrawing(e);
+      closeDrawing();
       break;
   }
 });
@@ -95,83 +95,117 @@ async function addPicture(topicIndex) {
     return;
   }
 
-  const newItem = new MenuItem(
+  const newDrawing = new Drawing(
     menuId, title, null, false, imageUrl
   );
-  menuItems.push(newItem);
+  drawings.push(newDrawing);
 
   // update ui early
-  addItemElem(newItem, menuItems.length - 1);
+  addItemElem(newDrawing, drawings.length - 1);
 }
 
-function updateMenuElem(menuId) {
+function updateUi() {
+  updateMenu('pics');
+  updateMenu('videos');
+  updateMenu('camera');
+  updateMain();
+}
+
+function updateMenu(menuId) {
   const menuElem = document.getElementById(menuId);
   if (menuElem === null) return;
 
   // empty menu
-  const oldItems = menuElem.querySelectorAll('[data-item]');
-  for (const oldItem of oldItems || []) {
-    menuElem.removeChild(oldItem);
+  const oldDrawings = menuElem.querySelectorAll('[data-item]');
+  for (const oldDrawing of oldDrawings || []) {
+    menuElem.removeChild(oldDrawing);
   }
   
   // populate menu
-  const items = menuItems.filter(item => 
-    item.menuId === menuId
+  const menuDrawings = drawings.filter(drawing => 
+    drawing.menuId === menuId
   );
-  for (const item of items) {
-    addItemElem(item, menuItems.indexOf(item));
+  for (const drawing of menuDrawings) {
+    addItemElem(drawing, drawings.indexOf(drawing));
   }
 }
 
-function addItemElem(newItem, index) {
+function updateMain() {
+  // set reference image
+  const refImageElem = document.getElementById('refImage');
+  if (refImageElem !== null) {
+    refImageElem.src = currentDrawing.imageUrl;
+  }
+
+  // set title
+  const currentTitleElem = document.querySelector('[data-insert="current-title"]');
+  if (currentTitleElem !== null) {
+    currentTitleElem.textContent = currentDrawing.title;
+  }
+}
+
+function addItemElem(drawing, index) {
   const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
   if (templateMenuItemElems === null) return;
 
-  const menuElem = document.getElementById(newItem.menuId);
+  const menuElem = document.getElementById(drawing.menuId);
   if (menuElem === null) return;
 
-  const newItemElem = templateMenuItemElems[0].cloneNode(true);
-  if (!newItem.isFinished) {
-    newItemElem.classList.add('unfinished');
+  const itemElem = templateMenuItemElems[0].cloneNode(true);
+  if (!drawing.isFinished) {
+    itemElem.classList.add('unfinished');
   }
-  const titleText = newItemElem.querySelector('[data-insert="new-title"]');
+  const titleText = itemElem.querySelector('[data-insert="new-title"]');
   if (titleText !== null) {
-    titleText.textContent = newItem.title;
+    titleText.textContent = drawing.title;
   }
-  newItemElem.dataset.index = index;
+  itemElem.dataset.index = index;
 
-  menuElem.append(newItemElem);
+  menuElem.append(itemElem);
 }
 
 function openPic(e) {
   const itemElem = e.target.parentNode;
   if (itemElem === null) return;
 
-  const index = itemElem.dataset.index;
-  const item = menuItems[index];
+  closeDrawing();
 
-  //TODO: close current canvas
-  //TODO: create new canvas
+  // set canvas
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
   canvasElem.width  = 400;
   canvasElem.height = 400;
 
-  // set reference image
-  const refImageElem = document.getElementById('refImage');
-  if (refImageElem !== null) {
-    refImageElem.src = item.imageUrl;
-  }
+  const index = itemElem.dataset.index;
+  const drawing = drawings[index];
 
-  // set title
-  const currentTitleElem = document.querySelector('[data-insert="current-title"]');
-  if (currentTitleElem !== null) {
-    currentTitleElem.textContent = item.title;
-  }
+  // update current drawing
+  currentDrawing = drawing;
+  updateUi();
 }
 
-function closeDrawing(e) {
-  confirm('Close drawing?')
+function saveDrawing() {
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem === null) return;
+
+  currentDrawing.piece = canvasElem.toDataURL();
+  currentDrawing.isFinished = true;
 }
 
-function saveCanvas(e) {}
+function closeDrawing() {
+  if (currentDrawing !== noDrawing) {
+    const doClose = confirm('Close current drawing?')
+    if (!doClose) return;
+  }
+
+  // clear canvas
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem === null) return;
+
+  const ctx = canvasElem.getContext('2d');
+  ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+
+  // clear current drawing
+  currentDrawing = noDrawing;
+  updateUi();
+}
