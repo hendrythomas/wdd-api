@@ -11,9 +11,11 @@ class Drawing {
   }
 }
 
-const drawings = [];
+let drawings = [];
 const noDrawing = new Drawing(null, '', null);
 let currentDrawing = noDrawing;
+
+storageToDrawings();
 
 document.addEventListener('DOMContentLoaded', () => {
   updateUi();
@@ -99,6 +101,7 @@ async function addPicture(topicIndex) {
     menuId, title, null, false, imageUrl
   );
   drawings.push(newDrawing);
+  drawingsToStorage();
 
   // update ui early
   addItemElem(newDrawing, drawings.length - 1);
@@ -193,6 +196,7 @@ function saveDrawing() {
 }
 
 function closeDrawing() {
+  // show prompt if drawing
   if (currentDrawing !== noDrawing) {
     const doClose = confirm('Close current drawing?')
     if (!doClose) return;
@@ -208,4 +212,14 @@ function closeDrawing() {
   // clear current drawing
   currentDrawing = noDrawing;
   updateUi();
+}
+
+function drawingsToStorage() {
+  const drawingsJson = JSON.stringify(drawings)
+  localStorage.setItem("drawings", drawingsJson);
+}
+
+function storageToDrawings() {
+  const storageDrawingsJson = localStorage.getItem("drawings");
+  drawings = JSON.parse(storageDrawingsJson) || [];
 }
