@@ -147,6 +147,28 @@ function updateMain() {
   if (currentTitleElem !== null) {
     currentTitleElem.textContent = currentDrawing.title;
   }
+
+  // set canvas
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem !== null) {
+    if (currentDrawing === noDrawing) {
+      // clear canvas
+      const ctx = canvasElem.getContext('2d');
+      ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+    }
+    else {
+      if (currentDrawing.piece !== null) {
+        const image = new Image();
+        image.src = currentDrawing.piece;
+        image.addEventListener('load', () => {
+          const ctx = canvasElem.getContext('2d');
+          ctx.drawImage(image, 0, 0);
+          canvas.width  = image.width;
+          canvas.height = image.height;
+        });
+      }
+    }
+  }
 }
 
 function addItemElem(drawing, index) {
@@ -186,23 +208,14 @@ function openDrawing(e) {
     canvas.width  = 400;
     canvas.height = 400;
   }
-  else {
-    const image = new Image();
-    image.src = drawing.piece;
-    image.addEventListener('load', () => {
-      const ctx = canvasElem.getContext('2d');
-      ctx.drawImage(image, 0, 0);
-      canvas.width  = image.width;
-      canvas.height = image.height;
-    });
-  }
 
-  // update current drawing
   currentDrawing = drawing;
   updateUi();
 }
 
 function saveDrawing() {
+  if (currentDrawing === noDrawing) return;
+
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
 
@@ -216,25 +229,19 @@ function saveDrawing() {
 }
 
 function closeDrawing() {
-  // show prompt if drawing
+  // only show prompt if drawing
   if (currentDrawing !== noDrawing) {
     const doClose = confirm('Close current drawing?')
     if (!doClose) return;
   }
 
-  // clear canvas
-  const canvasElem = document.getElementById('canvas');
-  if (canvasElem === null) return;
-
-  const ctx = canvasElem.getContext('2d');
-  ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
-
-  // clear current drawing
   currentDrawing = noDrawing;
   updateUi();
 }
 
 function deleteDrawing() {
+  if (currentDrawing === noDrawing) return;
+
   const doDelete = confirm('Delete current drawing?');
   if (!doDelete) return;
   
