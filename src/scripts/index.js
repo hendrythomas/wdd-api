@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('click', (e) => {
   switch (e.target.dataset.do) {
     case 'open-pic':
-      openPic(e);
+      openDrawing(e);
       break;
     case 'save-drawing':
       saveDrawing();
@@ -169,20 +169,33 @@ function addItemElem(drawing, index) {
   menuElem.append(itemElem);
 }
 
-function openPic(e) {
+function openDrawing(e) {
   const itemElem = e.target.parentNode;
   if (itemElem === null) return;
 
   closeDrawing();
 
+  const index = itemElem.dataset.index;
+  const drawing = drawings[index];
+
   // set canvas
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
-  canvasElem.width  = 400;
-  canvasElem.height = 400;
 
-  const index = itemElem.dataset.index;
-  const drawing = drawings[index];
+  if (drawing.piece === null) {
+    canvas.width  = 400;
+    canvas.height = 400;
+  }
+  else {
+    const image = new Image();
+    image.src = drawing.piece;
+    image.addEventListener('load', () => {
+      const ctx = canvasElem.getContext('2d');
+      ctx.drawImage(image, 0, 0);
+      canvas.width  = image.width;
+      canvas.height = image.height;
+    });
+  }
 
   // update current drawing
   currentDrawing = drawing;
