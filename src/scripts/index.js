@@ -195,6 +195,7 @@ function saveDrawing() {
 
   currentDrawing.piece = canvasElem.toDataURL();
   currentDrawing.isFinished = true;
+  drawingsToStorage();
 
   updateUi();
   
