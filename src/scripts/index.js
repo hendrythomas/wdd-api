@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateMenuElem('pics');
   updateMenuElem('videos');
   updateMenuElem('camera');
-  setUpSelectAddPic();
+  listenSelectAddPic();
+  listenCanvas();
 });
 
 document.addEventListener('click', (e) => {
@@ -35,22 +36,38 @@ document.addEventListener('click', (e) => {
   }
 });
 
-function setUpSelectAddPic() {
-  const selectAddPic = document.getElementById('select-add-pic');
-  if (selectAddPic === null) return;
+function listenSelectAddPic() {
+  const selectAddPicElem = document.getElementById('select-add-pic');
+  if (selectAddPicElem === null) return;
 
-  const popoverSelectAddPic = document.getElementById('popover-select-add-pic');
-  if (popoverSelectAddPic === null) return;
+  const selectAddPicPopover = document.getElementById('popover-select-add-pic');
+  if (selectAddPicPopover === null) return;
 
-  popoverSelectAddPic.addEventListener('toggle', (e) => {
+  selectAddPicPopover.addEventListener('toggle', (e) => {
     // clear input
-    selectAddPic.selectedIndex = 0;
+    selectAddPicElem.selectedIndex = 0;
   });
   
-  selectAddPic.addEventListener('change', (e) => {
-    addPicture(selectAddPic.selectedIndex);
-    popoverSelectAddPic.hidePopover();
+  selectAddPicElem.addEventListener('change', (e) => {
+    addPicture(selectAddPicElem.selectedIndex);
+    selectAddPicPopover.hidePopover();
   });
+}
+
+function listenCanvas() {
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem === null) return;
+  
+  canvasElem.addEventListener("mousedown", canvasTest);
+}
+
+function canvasTest(e) {
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem === null) return;
+
+  const ctx = canvasElem.getContext('2d');
+  ctx.rect(10, 10, 100, 100);
+  ctx.fill();
 }
 
 async function addPicture(topicIndex) {
@@ -135,6 +152,10 @@ function openPic(e) {
 
   //TODO: close current canvas
   //TODO: create new canvas
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem === null) return;
+  canvasElem.width  = 400;
+  canvasElem.height = 400;
 
   // set reference image
   const refImageElem = document.getElementById('refImage');

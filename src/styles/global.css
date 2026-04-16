@@ -153,22 +153,30 @@ main {
   }
 
   .easel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
     background-color: var(--bg-3);
     overflow: auto;
 
     canvas {
+      position: absolute;
+      right:  50%;
+      bottom: 50%;
+      translate: 50% 50%;
       width:  400px;
       height: 400px;
       background-color: white;
     }
 
     img {
+      position: absolute;
+      right:  50%;
+      bottom: 50%;
+      translate: 50% 50%;
       width:  400px;
       height: 400px;
       object-fit: contain;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
@@ -183,6 +191,9 @@ aside {
   width: 350px;
   padding: 1rem;
   border-radius: 10px;
+  color: var(--text);
+  background-color: var(--bg-1);
+  box-shadow: 0 4px 8px 0 #00000060;
 
   > :first-child {
     margin-top: 0;
