@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('click', (e) => {
   switch (e.target.dataset.do) {
-    case 'open-pic':
+    case 'open-drawing':
       openDrawing(e);
       break;
     case 'save-drawing':
@@ -161,10 +161,10 @@ function updateMain() {
         const image = new Image();
         image.src = currentDrawing.piece;
         image.addEventListener('load', () => {
-          const ctx = canvasElem.getContext('2d');
-          ctx.drawImage(image, 0, 0);
           canvas.width  = image.width;
           canvas.height = image.height;
+          const ctx = canvasElem.getContext('2d');
+          ctx.drawImage(image, 0, 0);
         });
       }
     }
