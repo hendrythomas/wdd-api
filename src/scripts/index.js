@@ -134,6 +134,9 @@ function addPhoto() {
   const file = uploadElem.files[0];
   if (file === undefined) return;
 
+  // clear input
+  uploadElem.value = null;
+
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.addEventListener('load', () => {
