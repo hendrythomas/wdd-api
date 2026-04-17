@@ -69,8 +69,12 @@ function canvasTest(e) {
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
 
+  var canvasRect = canvasElem.getBoundingClientRect();
+  const penX = e.clientX - canvasRect.left;
+  const penY = e.clientY - canvasRect.top;
+
   const ctx = canvasElem.getContext('2d');
-  ctx.rect(10, 10, 100, 100);
+  ctx.rect(penX, penY, 100, 100);
   ctx.fill();
 }
 
@@ -192,10 +196,14 @@ function addItemElem(drawing, index) {
 }
 
 function openDrawing(e) {
+  if (currentDrawing !== noDrawing) {
+    const doOpen = confirm('Current drawing will be closed. Continue?');
+    if (!doOpen) return;
+  }
+  currentDrawing = noDrawing;
+
   const itemElem = e.target.parentNode;
   if (itemElem === null) return;
-
-  closeDrawing();
 
   const index = itemElem.dataset.index;
   const drawing = drawings[index];
@@ -231,7 +239,7 @@ function saveDrawing() {
 function closeDrawing() {
   // only show prompt if drawing
   if (currentDrawing !== noDrawing) {
-    const doClose = confirm('Close current drawing?')
+    const doClose = confirm('Close drawing?');
     if (!doClose) return;
   }
 
@@ -242,7 +250,7 @@ function closeDrawing() {
 function deleteDrawing() {
   if (currentDrawing === noDrawing) return;
 
-  const doDelete = confirm('Delete current drawing?');
+  const doDelete = confirm('Delete drawing?');
   if (!doDelete) return;
   
   const index = drawings.indexOf(currentDrawing);
