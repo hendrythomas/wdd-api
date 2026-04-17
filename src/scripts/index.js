@@ -1,12 +1,12 @@
 import { actions } from 'astro:actions';
 
 class Drawing {
-  constructor(menuId, title, piece, isFinished=false, imageUrl='', videoUrl='') {
+  constructor(menuId, title, piece, isFinished=false, refUrl='', videoUrl='') {
     this.menuId = menuId;
     this.title = title;
     this.piece = piece;
     this.isFinished = isFinished;
-    this.imageUrl = imageUrl;
+    this.refUrl = refUrl;
     this.videoUrl = videoUrl;
   }
 }
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateUi();
   listenSelectAddPic();
   listenCanvas();
+  listenUpload();
 });
 
 document.addEventListener('click', (e) => {
@@ -62,19 +63,31 @@ function listenCanvas() {
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
   
-  canvasElem.addEventListener("mousedown", canvasTest);
+  canvasElem.addEventListener("mousemove", draw);
+  canvasElem.addEventListener("mousedown", draw);
 }
 
-function canvasTest(e) {
+function listenUpload() {
+  const uploadElem = document.querySelector('[data-do="upload-ref"] input[type="file"]');
+  if (uploadElem === null) return;
+
+  uploadElem.addEventListener("change", addPhoto);
+}
+
+function draw(e) {
+  // left mouse button
+  if (e.buttons !== 1) return;
+
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
 
+  //TODO: adjust for element css size
   var canvasRect = canvasElem.getBoundingClientRect();
   const penX = e.clientX - canvasRect.left;
   const penY = e.clientY - canvasRect.top;
 
   const ctx = canvasElem.getContext('2d');
-  ctx.rect(penX, penY, 100, 100);
+  ctx.rect(penX, penY, 2, 2);
   ctx.fill();
 }
 
@@ -82,29 +95,30 @@ async function addPicture(topicIndex) {
   const menuId = 'pics';
 
   // get image url
-  let imageUrl;
+  let refUrl;
   let title;
   if (topicIndex === 1) {
-    const imageUrlResult = await actions.getDuckUrl();
-    imageUrl = imageUrlResult.data;
+    const refUrlResult = await actions.getDuckUrl();
+    refUrl = refUrlResult.data;
     title = 'Duck';
   }
   else if (topicIndex === 2) {
-    const imageUrlResult = await actions.getDogUrl();
-    imageUrl = imageUrlResult.data;
+    const refUrlResult = await actions.getDogUrl();
+    refUrl = refUrlResult.data;
     title = 'Dog';
   }
   else if (topicIndex === 3) {
-    const imageUrlResult = await actions.getCatUrl();
-    imageUrl = imageUrlResult.data;
+    const refUrlResult = await actions.getCatUrl();
+    refUrl = refUrlResult.data;
     title = 'Cat';
   }
   else {
     return;
   }
 
+  // add drawing
   const newDrawing = new Drawing(
-    menuId, title, null, false, imageUrl
+    menuId, title, null, false, refUrl
   );
   drawings.push(newDrawing);
   drawingsToStorage();
@@ -113,66 +127,26 @@ async function addPicture(topicIndex) {
   addItemElem(newDrawing, drawings.length - 1);
 }
 
-function updateUi() {
-  updateMenu('pics');
-  updateMenu('videos');
-  updateMenu('camera');
-  updateMain();
-}
+function addPhoto() {
+  const uploadElem = document.querySelector('[data-do="upload-ref"] input[type="file"]');
+  if (uploadElem === null) return;
 
-function updateMenu(menuId) {
-  const menuElem = document.getElementById(menuId);
-  if (menuElem === null) return;
+  const file = uploadElem.files[0];
+  if (file === undefined) return;
 
-  // empty menu
-  const oldDrawings = menuElem.querySelectorAll('[data-item]');
-  for (const oldDrawing of oldDrawings || []) {
-    menuElem.removeChild(oldDrawing);
-  }
-  
-  // populate menu
-  const menuDrawings = drawings.filter(drawing => 
-    drawing.menuId === menuId
-  );
-  for (const drawing of menuDrawings) {
-    addItemElem(drawing, drawings.indexOf(drawing));
-  }
-}
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.addEventListener('load', () => {
+    // add drawing
+    const newDrawing = new Drawing(
+      'camera', 'Photo', null, false, reader.result
+    );
+    drawings.push(newDrawing);
+    drawingsToStorage();
 
-function updateMain() {
-  // set reference image
-  const refImageElem = document.getElementById('refImage');
-  if (refImageElem !== null) {
-    refImageElem.src = currentDrawing.imageUrl;
-  }
-
-  // set title
-  const currentTitleElem = document.querySelector('[data-insert="current-title"]');
-  if (currentTitleElem !== null) {
-    currentTitleElem.textContent = currentDrawing.title;
-  }
-
-  // set canvas
-  const canvasElem = document.getElementById('canvas');
-  if (canvasElem !== null) {
-    if (currentDrawing === noDrawing) {
-      // clear canvas
-      const ctx = canvasElem.getContext('2d');
-      ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
-    }
-    else {
-      if (currentDrawing.piece !== null) {
-        const image = new Image();
-        image.src = currentDrawing.piece;
-        image.addEventListener('load', () => {
-          canvas.width  = image.width;
-          canvas.height = image.height;
-          const ctx = canvasElem.getContext('2d');
-          ctx.drawImage(image, 0, 0);
-        });
-      }
-    }
-  }
+    // update ui early
+    addItemElem(newDrawing, drawings.length - 1);
+  });
 }
 
 function addItemElem(drawing, index) {
@@ -231,7 +205,8 @@ function saveDrawing() {
   currentDrawing.isFinished = true;
   drawingsToStorage();
 
-  updateUi();
+  //TODO: BUG PREVENTS CLOSE DRAWING
+  // updateUi();
   
   closeDrawing();
 }
@@ -263,6 +238,68 @@ function deleteDrawing() {
   updateUi();
 
   closeDrawing();
+}
+
+function updateUi() {
+  updateMenu('pics');
+  updateMenu('videos');
+  updateMenu('camera');
+  updateMain();
+}
+
+function updateMenu(menuId) {
+  const menuElem = document.getElementById(menuId);
+  if (menuElem === null) return;
+
+  // empty menu
+  const oldDrawings = menuElem.querySelectorAll('[data-item]');
+  for (const oldDrawing of oldDrawings || []) {
+    menuElem.removeChild(oldDrawing);
+  }
+  
+  // populate menu
+  const menuDrawings = drawings.filter(drawing => 
+    drawing.menuId === menuId
+  );
+  for (const drawing of menuDrawings) {
+    addItemElem(drawing, drawings.indexOf(drawing));
+  }
+}
+
+function updateMain() {
+  // set reference image
+  const refImageElem = document.getElementById('refImage');
+  if (refImageElem !== null) {
+    refImageElem.src = currentDrawing.refUrl;
+  }
+
+  // set title
+  const currentTitleElem = document.querySelector('[data-insert="current-title"]');
+  if (currentTitleElem !== null) {
+    currentTitleElem.textContent = currentDrawing.title;
+  }
+
+  // set canvas
+  const canvasElem = document.getElementById('canvas');
+  if (canvasElem !== null) {
+    if (currentDrawing === noDrawing) {
+      // clear canvas
+      const ctx = canvasElem.getContext('2d');
+      ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+    }
+    else {
+      if (currentDrawing.piece !== null) {
+        const image = new Image();
+        image.src = currentDrawing.piece;
+        image.addEventListener('load', () => {
+          canvas.width  = image.width;
+          canvas.height = image.height;
+          const ctx = canvasElem.getContext('2d');
+          ctx.drawImage(image, 0, 0);
+        });
+      }
+    }
+  }
 }
 
 function drawingsToStorage() {

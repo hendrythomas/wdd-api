@@ -25,11 +25,9 @@ export const prerender = false
               <span data-insert="current-title"></span>
             </span>
             <button class="icon-btn" data-do="delete-drawing">
-              <input type="checkbox">
               <i class="material-symbols-outlined">delete</i>
             </button>
             <button class="icon-btn" data-do="close-drawing">
-              <input type="checkbox">
               <i class="material-symbols-outlined">close</i>
             </button>
             <button class="icon-btn" data-do="save-drawing">
@@ -63,9 +61,10 @@ export const prerender = false
       <div class="menu" id="camera">
         <div class="item">
           <span class="label">Camera</span>
-          <button class="icon-btn">
+          <label class="icon-btn" data-do="upload-ref">
+            <input type="file">
             <i class="material-symbols-outlined">upload</i>
-          </button>
+          </label>
           <button class="icon-btn">
             <i class="material-symbols-outlined">photo_camera</i>
           </button>
