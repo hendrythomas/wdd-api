@@ -128,7 +128,7 @@ Omdat buttons dynamisch worden ingeladen, kan ik geen IDs gebruiken. Andere moge
 In de toekomst wil ik misschien meerdere buttons met dezelfde functionaliteit. Daarom gebruik ik `data`:
 
 ```html
-<button data-do=""></button>
+<button data-do="open-drawing"></button>
 ```
 
 Deze buttons kunnen dan gekoppeld worden met event listeners:
@@ -151,19 +151,19 @@ document.addEventListener('click', (e) => {
 Voor deze app moeten functies pas worden uitgevoerd als de gebruiker op een button klikt. In Astro kan dit met Actions ([bronnen](#Bronnen)). Bijvoorbeeld:
 
 ```js
-import { defineAction } from 'astro:actions';
+   import { defineAction } from 'astro:actions';
 
-export const server = {
-  getCatUrl: defineAction({
-    handler: async () => {
-      const url = 'https://cataas.com/cat?json=true';
-      const response = await fetch(url);
-      const result = await response.json();
-      const imageUrl = result.url;
-      return imageUrl;
-    }
-  })
-}
+   export const server = {
+     getCatUrl: defineAction({
+       handler: async () => {
+         const url = 'https://cataas.com/cat?json=true';
+         const response = await fetch(url);
+         const result = await response.json();
+         const imageUrl = result.url;
+         return imageUrl;
+       }
+     })
+   }
 ```
 ```js
   const refUrlResult = await actions.getCatUrl();
@@ -179,16 +179,34 @@ export const server = {
 
 ### Tekst
 
-omdat tekst meerdere plekken
-`data-insert`
+Omdat dezelfde tekst misschien meerdere plekken moet worden laten zien, heb ik weer `data` gebruikt:
 
-title, is finished
+```html
+   <span class="label">
+     <span class="before">Drawing: </span>
+     <span data-insert="current-title"></span>
+   </span>
+```
 
 ### Items
 
-template
+Items krijgen de volgende data van storage:
 
-geen components
+*  title
+*  is finished
+
+Omdat ik maar 1 pagina heb, en items dynamisch moeten kunnen worden ingeladen, kan ik geen Astro components gebruiken. In plaats daarvan heb ik `template` gebruikt.
+
+Dit gebruik ik zo in JavaScript:
+
+```js
+  const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
+  if (templateMenuItemElems === null) return;
+
+  const itemElem = templateMenuItemElems[0].cloneNode(true);
+
+  menuElem.append(itemElem);
+```
 
 
 ## Bronnen
