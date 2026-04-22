@@ -7,5 +7,7 @@ export default defineConfig({
   devToolbar: {
     enabled: true
   },
-  adapter: node({ mode: 'standalone' })
+  adapter: node({ mode: 'standalone' }),
+  output: 'server',
+  server: { host: true }
 });
