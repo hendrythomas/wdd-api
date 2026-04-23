@@ -8,6 +8,6 @@ export default defineConfig({
     enabled: true
   },
   adapter: node({ mode: 'standalone' }),
-  output: 'server',
+  output: 'static',
   server: { host: true }
 });
