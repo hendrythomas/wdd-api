@@ -9,5 +9,6 @@ export default defineConfig({
   },
   adapter: node({ mode: 'standalone' }),
   output: 'server',
-  server: { host: true }
+  server: { host: true },
+  security: { checkOrigin: false }
 });
