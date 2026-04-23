@@ -63,15 +63,15 @@ function listenCanvas() {
   const canvasElem = document.getElementById('canvas');
   if (canvasElem === null) return;
   
-  canvasElem.addEventListener("mousemove", draw);
-  canvasElem.addEventListener("mousedown", draw);
+  canvasElem.addEventListener('mousemove', draw);
+  canvasElem.addEventListener('mousedown', draw);
 }
 
 function listenUpload() {
   const uploadElem = document.querySelector('[data-do="upload-ref"] input[type="file"]');
   if (uploadElem === null) return;
 
-  uploadElem.addEventListener("change", addPhoto);
+  uploadElem.addEventListener('change', addPhoto);
 }
 
 function draw(e) {
@@ -173,7 +173,10 @@ function addItemElem(drawing, index) {
 }
 
 function openDrawing(e) {
-  if (currentDrawing !== noDrawing) {
+  if (
+    currentDrawing !== noDrawing &&
+    currentDrawing.isFinished === false
+  ) {
     const doOpen = confirm('Current drawing will be closed. Continue?');
     if (!doOpen) return;
   }
@@ -215,8 +218,10 @@ function saveDrawing() {
 }
 
 function closeDrawing() {
-  // only show prompt if drawing
-  if (currentDrawing !== noDrawing) {
+  if (
+    currentDrawing !== noDrawing &&
+    currentDrawing.isFinished === false
+  ) {
     const doClose = confirm('Close drawing?');
     if (!doClose) return;
   }
@@ -307,10 +312,10 @@ function updateMain() {
 
 function drawingsToStorage() {
   const drawingsJson = JSON.stringify(drawings)
-  localStorage.setItem("drawings", drawingsJson);
+  localStorage.setItem('drawings', drawingsJson);
 }
 
 function storageToDrawings() {
-  const storageDrawingsJson = localStorage.getItem("drawings");
+  const storageDrawingsJson = localStorage.getItem('drawings');
   drawings = JSON.parse(storageDrawingsJson) || [];
 }
