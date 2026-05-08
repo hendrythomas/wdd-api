@@ -1,0 +1,19 @@
+
+<div id="gallery"></div>
+
+<script>
+  const galleryElem = document.getElementById("gallery");
+  if (galleryElem !== null) {
+    const storageDrawingsJson = localStorage.getItem('drawings');
+    const drawings = JSON.parse(storageDrawingsJson) || [];
+
+    for (const drawing of drawings) {
+      if (drawing.piece !== null) {
+        const pieceElem = document.createElement('img');
+        pieceElem.src = drawing.piece;
+        pieceElem.style.width = '200px';
+        galleryElem.append(pieceElem);
+      }
+    }
+  }
+</script>
