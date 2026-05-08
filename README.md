@@ -71,7 +71,7 @@ Ik heb vandaag geleerd hoe je pagina's kan aanmaken in astro.
       *  `data`
 *  API voor foto's
 
-## Morgen
+### Morgen
 
 *  Meer foto API's toevoegen
 
@@ -112,7 +112,7 @@ Geen checkout
 
 Render geleerd
 
-## Volgende keer
+### Volgende keer
 
 *  Meer pagina's toevoegen
 
