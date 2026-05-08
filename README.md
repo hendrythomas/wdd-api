@@ -2,10 +2,10 @@
 
 Web APIs:
 *  Canvas, CanvasRenderingContext2D
-*  PIP
 *  Storage
 *  File
-*  Camera
+*  Camera, Media Stream
+*  Popover
 
 Content APIs:
 *  Random cats: [CATAAS](https://cataas.com/)
@@ -85,6 +85,7 @@ Ik heb vandaag geleerd hoe je pagina's kan aanmaken in astro.
 
 Geen checkout
 
+
 ## Dag 7
 
 *  Canvas API
@@ -93,6 +94,7 @@ Geen checkout
    *  Delete
 
 Geen checkout
+
 
 ## Dag 8
 
@@ -104,6 +106,43 @@ Geen checkout
 *  Youtube API geleerd
 
 Geen checkout
+
+
+## Dag 9
+
+Render geleerd
+
+## Volgende keer
+
+*  Meer pagina's toevoegen
+
+
+## Dag 10
+
+*  Render probleem opgelost
+*  Details pagina toegevoegd
+*  Kijken naar components
+
+
+## Dag 11
+
+### Feedback
+
+*  Detailspagina = landingspagina
+   *  Mag zelf ontwerpen
+   *  Route omwisselen met app
+*  Focus op web API camera, dan YouTube API
+   *  Video PIP gebruiken?
+
+## Volgende keer
+
+*  Gallerij op landingspagina
+*  Camera API
+
+## Dag 12
+
+*  LocalStorage gebruikt voor gallerij ([ontwerp](#Ontwerp))
+*  Camera API geïmplementeerd
 
 
 ## Ontwerp
@@ -123,7 +162,7 @@ Geen checkout
 
 ### Buttons
 
-Omdat buttons dynamisch worden ingeladen, kan ik geen IDs gebruiken. Andere mogelijkheden zijn `onclick` en `data`.
+Omdat buttons dynamisch worden ingeladen, kan ik geen Components gebruiken. Andere mogelijkheden zijn `id`, `onclick` en `data`.
 
 In de toekomst wil ik misschien meerdere buttons met dezelfde functionaliteit. Daarom gebruik ik `data`:
 
@@ -151,46 +190,75 @@ document.addEventListener('click', (e) => {
 Voor deze app moeten functies pas worden uitgevoerd als de gebruiker op een button klikt. In Astro kan dit met Actions ([bronnen](#Bronnen)). Bijvoorbeeld:
 
 ```js
-   import { defineAction } from 'astro:actions';
+import { defineAction } from 'astro:actions';
 
-   export const server = {
-     getCatUrl: defineAction({
-       handler: async () => {
-         const url = 'https://cataas.com/cat?json=true';
-         const response = await fetch(url);
-         const result = await response.json();
-         const imageUrl = result.url;
-         return imageUrl;
-       }
-     })
-   }
+export const server = {
+  getCatUrl: defineAction({
+    handler: async () => {
+      const url = 'https://cataas.com/cat?json=true';
+      const response = await fetch(url);
+      const result = await response.json();
+      const imageUrl = result.url;
+      return imageUrl;
+    }
+  })
+}
 ```
 ```js
-  const refUrlResult = await actions.getCatUrl();
-  refUrl = refUrlResult.data;
-  title = 'Cat';
+const refUrlResult = await actions.getCatUrl();
+refUrl = refUrlResult.data;
+title = 'Cat';
 
-  const newDrawing = new Drawing(
-    menuId, title, null, false, refUrl
-  );
+const newDrawing = new Drawing(
+ menuId, title, null, false, refUrl
+);
+```
+
+#### Render security
+
+Op Render kreeg ik eerst een CORS error als APIs werden opgehaald.
+
+Ik herkende deze error. Omdat mijn setup hetzelfde was lag dit waarschijnlijk aan Astro Actions.
+
+Ik heb de volgende aanpassing gemaakt in de Astro config volgens de documentatie ([bronnen](#Bronnen)):
+
+```js
+server: { host: true },
+security: { checkOrigin: false }
 ```
 
 ### Dynamic content
 
+Voor de items en gallerij wilde ik eerst components met JavaScript in de HTML gebruiken. Maar dit is niet mogelijk, omdat deze dynamisch moeten worden ingeladen (van local storage).
+
+Het wordt nu volledig met JavaScript gegenereerd:
+
+```js
+for (const drawing of drawings) {
+  if (drawing.piece !== null) {
+    const pieceElem = document.createElement('img');
+    pieceElem.src = drawing.piece;
+    galleryElem.append(pieceElem);
+  }
+}
+```
+
+Voor items gebruik ik HTML templates, zodat het makkelijker te bewerken is. Deze krijgen tekst via data (zie [#tekst](#tekst))
+
 ### Tekst
 
-Omdat dezelfde tekst misschien meerdere plekken moet worden laten zien, heb ik weer `data` gebruikt:
+Omdat dezelfde tekst misschien meerdere plekken moet worden laten zien, heb ik hiervoor weer `data` gebruikt:
 
 ```html
-   <span class="label">
-     <span class="before">Drawing: </span>
-     <span data-insert="current-title"></span>
-   </span>
+<span class="label">
+  <span class="before">Drawing: </span>
+  <span data-insert="current-title"></span>
+</span>
 ```
 
 ### Items
 
-Items krijgen de volgende data van storage:
+Item elementen krijgen de volgende data van storage:
 
 *  title
 *  is finished
@@ -200,12 +268,12 @@ Omdat ik maar 1 pagina heb, en items dynamisch moeten kunnen worden ingeladen, k
 Dit gebruik ik zo in JavaScript:
 
 ```js
-  const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
-  if (templateMenuItemElems === null) return;
+const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
+if (templateMenuItemElems === null) return;
 
-  const itemElem = templateMenuItemElems[0].cloneNode(true);
+const itemElem = templateMenuItemElems[0].cloneNode(true);
 
-  menuElem.append(itemElem);
+menuElem.append(itemElem);
 ```
 
 
@@ -215,3 +283,6 @@ Dit gebruik ik zo in JavaScript:
    *  https://docs.astro.build/en/guides/actions/
    *  https://docs.astro.build/en/reference/configuration-reference/
    *  https://docs.astro.build/en/guides/integrations-guide/node/
+   *  https://docs.astro.build/en/reference/configuration-reference/#security
+*  MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript
+*  `getUserMedia()` https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
