@@ -11,7 +11,7 @@ Content APIs:
 *  Random cats: [CATAAS](https://cataas.com/)
 *  Random dogs: [DaaS](https://dog.ceo/dog-api/)
 *  Random ducks: [Random-d.uk](https://random-d.uk/api)
-*  YouTube search results: [Search: list](https://developers.google.com/youtube/v3/docs/search/list)
+*  ~~YouTube search results: [Search: list](https://developers.google.com/youtube/v3/docs/search/list)~~
 
 
 ## Dag 1
