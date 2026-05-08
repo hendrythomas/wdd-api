@@ -170,34 +170,13 @@ main {
       background-color: white;
     }
 
-    .ref-container {
+    img {
       position: absolute;
-      right:  50%;
-      bottom: 50%;
-      translate: 50% 50%;
-      width:  400px;
-      height: 400px;
-      overflow: auto;
-      scrollbar-gutter: stable both-edges;
-
-      &::after {
-        content: '';
-        position: absolute;
-        right:  50%;
-        bottom: 50%;
-        translate: 50% 50%;
-        width:  200%;
-        height: 200%;
-      }
-
-      img {
-        position: absolute;
-        width:  100%;
-        height: 100%;
-        object-fit: contain;
-        opacity: 0.5;
-        pointer-events: none;
-      }
+      width:  100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
 }
