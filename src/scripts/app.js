@@ -38,6 +38,12 @@ document.addEventListener('click', (e) => {
     case 'delete-drawing':
       deleteDrawing();
       break;
+    case 'enable-webcam':
+      enableWebcam();
+      break;
+    case 'take-photo':
+      takePhoto();
+      break;
   }
 });
 
@@ -151,6 +157,50 @@ function addPhoto() {
     addItemElem(newDrawing, drawings.length - 1);
   });
 }
+
+function takePhoto() {
+  const webcamVideo = document.getElementById('webcam-video');
+  if (webcamVideo === null) return;
+
+  // make screenshot of webcam video
+  const videoCanvas = document.createElement('canvas');
+  videoCanvas.width  = webcamVideo.videoWidth;
+  videoCanvas.height = webcamVideo.videoHeight;
+  const ctx = videoCanvas.getContext('2d');
+  ctx.drawImage(webcamVideo, 0, 0);
+
+  // add drawing
+  const newDrawing = new Drawing(
+    'camera', 'Photo', null, false, videoCanvas.toDataURL()
+  );
+  drawings.push(newDrawing);
+  drawingsToStorage();
+
+  // update ui early
+  addItemElem(newDrawing, drawings.length - 1);
+
+  // close popover
+  const popover = document.getElementById("popover-take-photo");
+  if (popover !== null) {
+    popover.hidePopover();
+  }
+}
+
+function enableWebcam() {
+  const webcamVideo = document.getElementById('webcam-video');
+  if (webcamVideo === null) return;
+
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then((mediaStream) => {
+      webcamVideo.srcObject = mediaStream;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function disableWebcam() {}
 
 function addItemElem(drawing, index) {
   const templateMenuItemElems = document.getElementById('template-menu-item').content.children;
